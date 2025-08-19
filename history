@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require_relative 'rae'
+
+def history
+  cli = RaeAPI.new
+  puts cli.history
+end
+
+history

@@ -1,10 +1,22 @@
 require_relative 'lib/raeapi/client'
 require_relative 'lib/raeapi/database'
 
+require 'date'
+
 class RaeAPI
   def initialize
     @cli = RaeApi::Client.new
     @db = RaeApi::Database.new
+  end
+
+  def history
+    res = @db.all
+    puts 'No hay resultados.' if res.empty?
+
+    res.each do |r|
+      puts "#{r[:word]}: #{r[:meaning]}"
+    end
+    nil
   end
 
   def search(word)
@@ -35,7 +47,8 @@ class RaeAPI
     return 'NO_DEF' if senses.empty?
 
     senses.each do |meaning|
-      @db.write(word, meaning)
+      date = Date.today.to_s
+      @db.write(word, meaning, date)
     end
     senses.join("\n")
   end
