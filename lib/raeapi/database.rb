@@ -27,10 +27,29 @@ module RaeApi
       mean
     end
 
-    def all
+    def all(date)
       res = []
       CSV.foreach(@db.path, headers: true) do |fila|
+        next unless date.nil? || fila['date'] == date
+
         res << { meaning: fila['meaning'], word: fila['word'] }
+      end
+      res
+    end
+
+    def group(date)
+      res = []
+      CSV.foreach(@db.path, headers: true) do |fila|
+        next unless date.nil? || fila['date'] == date
+
+        meaning = fila['meaning']
+        word = fila['word']
+        word_meanings = res.find { |r| r[:word] == word }
+        if word_meanings.nil?
+          res << { meaning: [meaning], word: }
+        else
+          word_meanings[:meaning] << meaning
+        end
       end
       res
     end

@@ -9,12 +9,27 @@ class RaeAPI
     @db = RaeApi::Database.new
   end
 
-  def history
-    res = @db.all
-    puts 'No hay resultados.' if res.empty?
+  def _history(date = nil)
+    puts 'LOG: mostrando historial.'
+    res = @db.all(date)
+    puts 'LOG: No hay resultados.' if res.empty?
 
     res.each do |r|
       puts "#{r[:word]}: #{r[:meaning]}"
+    end
+    nil
+  end
+
+  def history(date = nil)
+    puts 'LOG: mostrando historial.'
+    res = @db.group(date)
+    puts 'LOG: No hay resultados.' if res.empty?
+
+    res.each do |r|
+      puts "\n#{r[:word].capitalize}:"
+      r[:meaning].each do |rm|
+        puts "\t#{rm}"
+      end
     end
     nil
   end
