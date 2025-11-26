@@ -1,56 +1,82 @@
+# frozen_string_literal: true
+
 require 'csv'
+require 'sqlite3'
 
 module RaeApi
   class Database
     def initialize
-      path = "#{ENV.fetch('RAE_DB_PATH', '')}/db.csv"
-      @db = CSV.open(path)
-    rescue StandardError
-      @db = CSV.open(path, 'w') do |csv|
-        csv << %w[word meaning date]
-      end
+      path = "#{ENV.fetch('RAE_DB_PATH', '')}/db.db"
+      @db = SQLite3::Database.new(path)
+      @db.execute <<~SQL
+              CREATE TABLE IF NOT EXISTS definitions (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              word TEXT NOT NULL,
+              meaning TEXT NOT NULL,
+              date TEXT NOT NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
+        CREATE INDEX IF NOT EXISTS idx_word ON definitions(word);
+        CREATE INDEX IF NOT EXISTS idx_date ON definitions(date);
+      SQL
     end
 
     attr_reader :db
 
     def write(word, meaning, date)
-      CSV.open(@db.path, 'a') do |csv|
-        csv << [word, meaning, date]
-      end
+      db.execute 'INSERT INTO definitions (word, meaning, date) VALUES (?, ?, ?)', [word, meaning, date]
     end
 
     def search(word)
       mean = []
-      CSV.foreach(@db.path, headers: true) do |fila|
-        mean << fila['meaning'] if fila['word'] == word
+      db.execute('SELECT meaning FROM definitions WHERE word = ?', word).each do |row|
+        mean << row
       end
-      mean
     end
 
     def all(date)
       res = []
-      CSV.foreach(@db.path, headers: true) do |fila|
-        next unless date.nil? || fila['date'] == date
 
-        res << { meaning: fila['meaning'], word: fila['word'] }
+      query = 'SELECT meaning, word FROM definitions'
+      result = if date.nil?
+                 db.query(query)
+               else
+                 db.query("#{query} WHERE date = ?", [date])
+               end
+      result.each do |row|
+        res << { meaning: row.first, word: row.last }
       end
       res
     end
 
     def group(date)
       res = []
-      CSV.foreach(@db.path, headers: true) do |fila|
-        next unless date.nil? || fila['date'] == date
 
-        meaning = fila['meaning']
-        word = fila['word']
-        word_meanings = res.find { |r| r[:word] == word }
-        if word_meanings.nil?
-          res << { meaning: [meaning], word: }
+      query = 'SELECT word, meaning FROM definitions'
+      result = if date.nil?
+                 db.query("#{query} ORDER BY word")
+               else
+                 db.query("#{query} WHERE date = ? ORDER BY word", [date])
+               end
+
+      current_word = nil
+      current_meanings = []
+
+      result.each do |row|
+        word = row[0]
+        meaning = row[1]
+
+        if word != current_word
+          res << { word: current_word, meaning: current_meanings } unless current_word.nil?
+          current_word = word
+          current_meanings = [meaning]
         else
-          word_meanings[:meaning] << meaning
+          current_meanings << meaning
         end
       end
+
+      res << { word: current_word, meaning: current_meanings } unless current_word.nil?
       res
     end
   end

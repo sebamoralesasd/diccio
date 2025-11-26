@@ -9,7 +9,7 @@ module RaeApi
 
     def get(params = nil)
       @http_cli.get do |req|
-        req.options.timeout = 1
+        req.options.timeout = 5
         req.params = params unless params.nil?
       end
     end

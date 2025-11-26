@@ -7,3 +7,7 @@ ruby '3.3.1'
 
 gem 'logger'
 gem 'pry'
+gem 'rubocop'
+gem 'solargraph'
+
+gem 'sqlite3', '~> 2.8'

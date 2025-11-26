@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'lib/raeapi/client'
 require_relative 'lib/raeapi/database'
 

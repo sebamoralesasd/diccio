@@ -7,6 +7,9 @@ require_relative 'clientdefaults'
 require_relative 'connection'
 
 module RaeApi
+  class Error < StandardError
+  end
+
   class Client
     include ClientDefaults
 
@@ -15,6 +18,8 @@ module RaeApi
       sub_path = "/words/#{en_word}"
 
       response = get(sub_path)
+      raise Error if response.status != 200
+
       response.body
     end
 
