@@ -12,7 +12,7 @@ module RaeApi
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               word TEXT NOT NULL,
               meaning TEXT NOT NULL,
-              date TEXT NOT NULL,
+              date DATE DEFAULT (DATE('now')),
               created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
 
@@ -23,8 +23,8 @@ module RaeApi
 
     attr_reader :db
 
-    def write(word, meaning, date)
-      db.execute 'INSERT INTO definitions (word, meaning, date) VALUES (?, ?, ?)', [word, meaning, date]
+    def write(word, meaning)
+      db.execute 'INSERT INTO definitions (word, meaning) VALUES (?, ?)', [word, meaning]
     end
 
     def search(word)

@@ -3,8 +3,6 @@
 require_relative 'lib/raeapi/client'
 require_relative 'lib/raeapi/database'
 
-require 'date'
-
 class RaeAPI
   def initialize
     @cli = RaeApi::Client.new
@@ -64,8 +62,7 @@ class RaeAPI
     return 'NO_DEF' if senses.empty?
 
     senses.each do |meaning|
-      date = Date.today.to_s
-      @db.write(word, meaning, date)
+      @db.write(word, meaning)
     end
     senses.join("\n")
   end
