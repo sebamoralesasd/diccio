@@ -9,6 +9,10 @@ class RaeAPI
     @db = RaeApi::Database.new
   end
 
+  def close
+    @db.close
+  end
+
   def _history(date = nil)
     puts 'LOG: mostrando historial.'
     res = @db.all(date)

@@ -23,16 +23,16 @@ module RaeApi
 
     attr_reader :db
 
+    def close
+      @db.close if @db && !@db.closed?
+    end
+
     def write(word, meaning)
       db.execute 'INSERT INTO definitions (word, meaning) VALUES (?, ?)', [word, meaning]
     end
 
     def search(word)
-      mean = []
-      db.execute('SELECT meaning FROM definitions WHERE word = ?', word).each do |row|
-        mean << row.first
-      end
-      mean
+      db.execute('SELECT meaning FROM definitions WHERE word = ?', word).map(&:first)
     end
 
     def all(date)

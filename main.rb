@@ -10,6 +10,8 @@ def main
   end
   cli = RaeAPI.new
   puts cli.search(ARGV[0])
+ensure
+  cli&.close
 end
 
 main

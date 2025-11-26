@@ -18,9 +18,11 @@ module RaeApi
       sub_path = "/words/#{en_word}"
 
       response = get(sub_path)
-      raise Error if response.status != 200
+      raise Error, "HTTP #{response.status}: #{response.body}" unless response.status == 200
 
       response.body
+    rescue Faraday::Error => e
+      raise Error, "Network error: #{e.message}"
     end
 
     private
