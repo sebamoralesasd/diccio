@@ -18,5 +18,5 @@
 - **Accessors**: Use `attr_reader` instead of explicit getters
 - **Organization**: Private methods grouped under `private` keyword at end of class
 - **Modern syntax**: Hash shorthand `{ word: }` instead of `{ word: word }`, use trailing commas in multiline arrays/hashes
-- **HTTP/CSV**: Use Faraday for HTTP requests (5s timeout default), CSV stdlib for database
+- **HTTP/Database**: Use Faraday for HTTP requests (5s timeout default), SQLite3 for database
 - **Logging**: Use `puts 'LOG: ...'` for user-facing messages (Logger gem available but not currently used)

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require 'csv'
 require 'sqlite3'
 
 module RaeApi
   class Database
     def initialize
-      path = "#{ENV.fetch('RAE_DB_PATH', '')}/db.db"
+      path = "#{ENV.fetch('RAE_DB_PATH', '.')}/db.db"
       @db = SQLite3::Database.new(path)
       @db.execute <<~SQL
               CREATE TABLE IF NOT EXISTS definitions (
@@ -31,8 +30,9 @@ module RaeApi
     def search(word)
       mean = []
       db.execute('SELECT meaning FROM definitions WHERE word = ?', word).each do |row|
-        mean << row
+        mean << row.first
       end
+      mean
     end
 
     def all(date)
