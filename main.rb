@@ -4,14 +4,14 @@
 require_relative 'rae'
 
 def main
-  if ARGV.empty?
-    puts 'Falta palabra'
-    return
-  end
   cli = RaeAPI.new
   puts cli.search(ARGV[0])
+rescue RaeApi::Error => e
+  abort e.message
 ensure
   cli&.close
 end
+
+abort 'Falta palabra' if ARGV.empty?
 
 main

@@ -19,6 +19,7 @@ module RaeApi
 
       response = get(sub_path)
       raise Error, "HTTP #{response.status}: #{response.body}" unless response.status == 200
+      raise Error, 'Respuesta inesperada de la API: el cuerpo no es JSON' unless response.body.is_a?(Hash)
 
       response.body
     rescue Faraday::Error => e
@@ -32,7 +33,7 @@ module RaeApi
     end
 
     def conn(path)
-      @conn ||= Connection.new(BASE_URL + path)
+      Connection.new(BASE_URL + path)
     end
   end
 end

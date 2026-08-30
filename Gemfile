@@ -10,4 +10,5 @@ gem 'pry'
 gem 'rubocop'
 gem 'solargraph'
 
+gem 'faraday', '~> 2.14'
 gem 'sqlite3', '~> 2.8'

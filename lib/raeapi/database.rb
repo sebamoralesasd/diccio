@@ -1,20 +1,23 @@
 # frozen_string_literal: true
 
+require 'date'
 require 'sqlite3'
 
 module RaeApi
   class Database
+    DEFAULT_DIR = File.expand_path('../..', __dir__)
+
     def initialize
-      path = "#{ENV.fetch('RAE_DB_PATH', '.')}/db.db"
+      path = "#{ENV.fetch('RAE_DB_PATH', DEFAULT_DIR)}/db.db"
       @db = SQLite3::Database.new(path)
-      @db.execute <<~SQL
-              CREATE TABLE IF NOT EXISTS definitions (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              word TEXT NOT NULL,
-              meaning TEXT NOT NULL,
-              date DATE DEFAULT (DATE('now')),
-              created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            );
+      @db.execute_batch <<~SQL
+        CREATE TABLE IF NOT EXISTS definitions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          word TEXT NOT NULL,
+          meaning TEXT NOT NULL,
+          date DATE DEFAULT (DATE('now', 'localtime')),
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
 
         CREATE INDEX IF NOT EXISTS idx_word ON definitions(word);
         CREATE INDEX IF NOT EXISTS idx_date ON definitions(date);
@@ -28,7 +31,8 @@ module RaeApi
     end
 
     def write(word, meaning)
-      db.execute 'INSERT INTO definitions (word, meaning) VALUES (?, ?)', [word, meaning]
+      db.execute 'INSERT INTO definitions (word, meaning, date) VALUES (?, ?, ?)',
+                 [word, meaning, Date.today.to_s]
     end
 
     def search(word)

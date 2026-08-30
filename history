@@ -5,8 +5,11 @@ require_relative 'rae'
 
 def history
   cli = RaeAPI.new
-  date = ARGV[0] || nil
-  puts cli.history(date)
+  cli.history(ARGV[0])
+rescue RaeApi::Error => e
+  abort e.message
+ensure
+  cli&.close
 end
 
 history

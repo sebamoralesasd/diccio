@@ -74,7 +74,7 @@ class RaeAPI
   private
 
   def ls_senses(senses)
-    return '' if senses.nil? || senses.empty?
+    return [] if senses.nil? || senses.empty?
 
     senses.map do |s|
       s['raw']
