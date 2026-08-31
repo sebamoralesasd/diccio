@@ -1,5 +1,5 @@
-Style/Documentation:
-  Enabled: false
+inherit_from: .rubocop_todo.yml
 
-# AllCops:
-#   NewCops: enable
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false

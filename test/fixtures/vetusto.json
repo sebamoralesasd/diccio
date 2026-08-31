@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "data": {
+    "word": "vetusto",
+    "meanings": [
+      {
+        "origin": { "raw": "Del lat. vetustus.", "type": "lat" },
+        "senses": [
+          {
+            "raw": "1. adj. Extremadamente viejo, anticuado.",
+            "meaning_number": 1,
+            "category": "adjective"
+          },
+          {
+            "raw": "2. adj. Que existe desde hace mucho tiempo.",
+            "meaning_number": 2,
+            "category": "adjective"
+          }
+        ]
+      },
+      {
+        "origin": { "raw": "Sin acepciones.", "type": "lat" },
+        "senses": []
+      },
+      {
+        "origin": { "raw": "Bloque sin clave senses.", "type": "lat" }
+      }
+    ]
+  }
+}
