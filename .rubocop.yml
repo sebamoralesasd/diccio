@@ -3,3 +3,8 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   NewCops: enable
   SuggestExtensions: false
+
+# Las clases se documentan solas por su nombre y su tamaño; los comentarios de
+# clase envejecen mal y nadie los lee.
+Style/Documentation:
+  Enabled: false

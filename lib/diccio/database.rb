@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sqlite3'
+require_relative 'errors'
 
 module Diccio
   class Database
@@ -8,10 +9,12 @@ module Diccio
 
     attr_reader :connection
 
-    def initialize(path = ENV.fetch('DICCIO_DB', DEFAULT_PATH))
+    def initialize(path: ENV.fetch('DICCIO_DB', DEFAULT_PATH))
       @connection = SQLite3::Database.new(path)
       @connection.results_as_hash = true
       create_schema
+    rescue SQLite3::Exception => e
+      raise DatabaseError, "Fallo al abrir la base de datos: #{e.message}"
     end
 
     def create_schema

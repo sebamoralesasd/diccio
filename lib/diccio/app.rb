@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'api_client'
-require_relative 'database'
 require_relative 'formatter'
 require_relative 'logging'
 require_relative 'repository'
@@ -10,7 +9,7 @@ module Diccio
   class App
     attr_reader :options, :repository, :api_client
 
-    def initialize(options, repository: Repository.new(Database.new), api_client: ApiClient.new)
+    def initialize(options, repository: Repository.new, api_client: ApiClient.new)
       @options = options
       @repository = repository
       @api_client = api_client

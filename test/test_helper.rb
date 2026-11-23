@@ -15,7 +15,7 @@ module Diccio
     end
 
     def memory_repository
-      Repository.new(Database.new(':memory:'))
+      Repository.new(database: Database.new(path: ':memory:'))
     end
 
     def stub_client(status:, body:, headers: { 'Content-Type' => 'application/json' })

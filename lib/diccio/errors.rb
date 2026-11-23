@@ -7,5 +7,7 @@ module Diccio
 
   class NotFoundError < Error; end
 
+  class DatabaseError < Error; end
+
   class UsageError < Error; end
 end
